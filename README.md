@@ -11,7 +11,7 @@ The Android app is built with **Kotlin** and **Jetpack Compose** using modern Ma
 ### Core Android Features:
 - **Premium Hero Banner & Scrolling Categories**: Highlights hot arrivals and easy navigation between iPhone/Android models.
 - **Advanced Stock Filters**: Instantly filter stock by (iPhone New, iPhone Second, Android New, Android Second).
-- **Responsive Products Grid**: Visual condition tags ("ပါကင်သစ်", "Second 99%") and pricing in MMK.
+- **Responsive Products Grid**: Visual condition tags ("ပါကင်သစ်", "Second 99%") and pricing in THB.
 - **Specs Detail Bottom Sheet**: Modern sheet with complete device specifications and single-tap Viber/Messenger social messaging actions.
 - **Saved Favorites**: Powered by a robust **Room SQLite database** for offline local persistent tracking.
 - **Functional Live Search**: Top-level search filters phone items dynamically as you type.

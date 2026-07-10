@@ -57,9 +57,9 @@ class MainActivity : ComponentActivity() {
 }
 
 // Helper to format currency
-fun formatMMK(amount: Long): String {
+fun formatTHB(amount: Long): String {
     val formatter = NumberFormat.getInstance(Locale.US)
-    return "${formatter.format(amount)} MMK"
+    return "${formatter.format(amount)} THB"
 }
 
 // External communication handlers
@@ -813,7 +813,7 @@ fun OffersScreen(viewModel: MainViewModel) {
                         Product(
                             id = fav.id,
                             name = fav.name,
-                            priceMMK = fav.price,
+                            priceTHB = fav.price,
                             condition = fav.condition,
                             category = fav.category,
                             subcategory = "Phone",
@@ -825,7 +825,7 @@ fun OffersScreen(viewModel: MainViewModel) {
                             Product(
                                 id = fav.id,
                                 name = fav.name,
-                                priceMMK = fav.price,
+                                priceTHB = fav.price,
                                 condition = fav.condition,
                                 category = fav.category,
                                 subcategory = "Phone",
@@ -1138,9 +1138,9 @@ fun ProductItemCard(
                 
                 Spacer(modifier = Modifier.height(2.dp))
 
-                val priceToShow = if (product.hasDiscount) product.discountPriceMMK else product.priceMMK
+                val priceToShow = if (product.hasDiscount) product.discountPriceTHB else product.priceTHB
                 Text(
-                    text = formatMMK(priceToShow),
+                    text = formatTHB(priceToShow),
                     fontWeight = FontWeight.Black,
                     fontSize = 12.sp,
                     color = PrimaryColor
@@ -1148,7 +1148,7 @@ fun ProductItemCard(
 
                 if (product.hasDiscount) {
                     Text(
-                        text = formatMMK(product.priceMMK),
+                        text = formatTHB(product.priceTHB),
                         fontSize = 9.sp,
                         color = Color(0xFF94A3B8),
                         style = TextStyle(
@@ -1244,13 +1244,13 @@ fun PromotionCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = formatMMK(product.discountPriceMMK),
+                        text = formatTHB(product.discountPriceTHB),
                         fontWeight = FontWeight.ExtraBold,
                         color = MaterialTheme.colorScheme.primary,
                         fontSize = 14.sp
                     )
                     Text(
-                        text = formatMMK(product.priceMMK),
+                        text = formatTHB(product.priceTHB),
                         style = TextStyle(
                             textDecoration = TextDecoration.LineThrough
                         ),
@@ -1316,7 +1316,7 @@ fun FavouriteCard(
                     fontSize = 14.sp
                 )
                 Text(
-                    text = formatMMK(fav.price),
+                    text = formatTHB(fav.price),
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 12.sp
@@ -1382,16 +1382,16 @@ fun ProductDetailSheet(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    val currentPrice = if (product.hasDiscount) product.discountPriceMMK else product.priceMMK
+                    val currentPrice = if (product.hasDiscount) product.discountPriceTHB else product.priceTHB
                     Text(
-                        text = formatMMK(currentPrice),
+                        text = formatTHB(currentPrice),
                         style = MaterialTheme.typography.titleLarge,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.ExtraBold
                     )
                     if (product.hasDiscount) {
                         Text(
-                            text = formatMMK(product.priceMMK),
+                            text = formatTHB(product.priceTHB),
                             style = TextStyle(
                                 textDecoration = TextDecoration.LineThrough
                             ),

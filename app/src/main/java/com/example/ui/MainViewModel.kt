@@ -60,7 +60,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     FavouriteProduct(
                         id = product.id,
                         name = product.name,
-                        price = product.priceMMK,
+                        price = product.priceTHB,
                         condition = product.condition,
                         category = product.category,
                         specs = product.specs
