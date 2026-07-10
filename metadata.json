@@ -1,0 +1,6 @@
+{
+  "name": "AI Mobile Tachileik",
+  "description": "Stock checking and pricing catalog application for AI Mobile store in Tachileik, featuring offline stock viewing, spec lookups, and direct Viber/Messenger chat channels.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

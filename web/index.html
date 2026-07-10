@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>AI Mobile Tachileik</title>
+    <!-- Tailwind CSS for super sleek utility layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for modern tech typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-[#F6F8FA] text-slate-900 font-['Plus_Jakarta_Sans',sans-serif] min-h-screen pb-24">
+
+    <!-- Header Section -->
+    <header class="bg-white sticky top-0 z-40 px-4 pt-4 pb-3 rounded-b-[24px] shadow-sm border-b border-slate-100">
+        <div class="max-w-md mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-indigo-100 overflow-hidden relative">
+                    <img src="../app/src/main/res/drawable/img_store_logo.jpg" alt="AI" class="w-full h-full object-cover absolute inset-0 z-10" onerror="this.style.display='none'">
+                    <span class="logo-fallback font-black">AI</span>
+                </div>
+                <div>
+                    <h1 class="text-sm font-bold leading-tight">AI Mobile</h1>
+                    <p class="text-[10px] text-slate-500 font-medium tracking-wide uppercase">Tachileik Shop</p>
+                </div>
+            </div>
+            <!-- Favorite Quick Indicator -->
+            <button onclick="switchTab('offers')" class="relative p-2 text-slate-400 hover:text-rose-500 transition-colors">
+                <i class="fa-solid fa-heart text-xl"></i>
+                <span id="fav-badge-count" class="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-extrabold rounded-full w-4 h-4 flex items-center justify-center hidden">0</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Views Container -->
+    <main class="max-w-md mx-auto px-4 py-4">
+        
+        <!-- Tab 0: Home Screen -->
+        <section id="view-home" class="view-content space-y-6">
+            <!-- Functional Top Search -->
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                </span>
+                <input type="text" id="home-search" oninput="handleHomeSearch(this.value)" placeholder="Search phone models..." class="w-full bg-slate-100 border-0 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 rounded-2xl py-3 pl-10 pr-10 text-xs text-slate-800 placeholder-slate-400 shadow-inner">
+                <button onclick="clearSearch('home-search')" id="home-clear-btn" class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hidden">
+                    <i class="fa-solid fa-circle-xmark text-xs"></i>
+                </button>
+            </div>
+
+            <!-- Premium Hero Banner -->
+            <section class="relative h-32 flex-shrink-0 bg-indigo-600 rounded-3xl overflow-hidden shadow-xl shadow-indigo-100/50 flex flex-col justify-center p-5">
+                <div class="absolute inset-0 bg-gradient-to-r from-indigo-700/80 to-transparent z-10 p-5 flex flex-col justify-center">
+                    <span class="text-[10px] font-bold text-indigo-200 uppercase tracking-widest mb-1">New Arrival</span>
+                    <h2 class="text-xl font-bold text-white leading-tight">iPhone 15 Pro Max</h2>
+                    <p class="text-[10px] text-indigo-100 mt-1 opacity-90">ပါကင်သစ် • Titan Blue • In Stock</p>
+                </div>
+                <div class="absolute right-[-10%] top-1/2 -translate-y-1/2 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+            </section>
+
+            <!-- Categories Row -->
+            <div>
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-xs font-bold text-slate-800 tracking-tight uppercase">Browse Categories</h3>
+                    <span onclick="switchTab('phones')" class="text-[10px] font-semibold text-indigo-600 cursor-pointer hover:underline">View All</span>
+                </div>
+                <div class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                    <!-- iPhone New Category -->
+                    <button onclick="filterPhonesTab('iPhone New')" class="flex-1 min-w-[90px] bg-white p-3 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 shadow-sm hover:scale-[1.02] active:scale-95 transition-all">
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                            <i class="fa-solid fa-mobile-button text-lg"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-800">iPhone New</span>
+                    </button>
+                    <!-- iPhone Second Category -->
+                    <button onclick="filterPhonesTab('iPhone Second')" class="flex-1 min-w-[90px] bg-white p-3 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 shadow-sm hover:scale-[1.02] active:scale-95 transition-all">
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                            <i class="fa-solid fa-mobile-screen text-lg"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-800">iPhone 2nd</span>
+                    </button>
+                    <!-- Android New Category -->
+                    <button onclick="filterPhonesTab('Android New')" class="flex-1 min-w-[90px] bg-white p-3 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 shadow-sm hover:scale-[1.02] active:scale-95 transition-all">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center">
+                            <i class="fa-solid fa-robot text-lg"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-800">Android New</span>
+                    </button>
+                    <!-- Android Second Category -->
+                    <button onclick="filterPhonesTab('Android Second')" class="flex-1 min-w-[90px] bg-white p-3 rounded-2xl border border-slate-100 flex flex-col items-center gap-2 shadow-sm hover:scale-[1.02] active:scale-95 transition-all">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 text-orange-500 flex items-center justify-center">
+                            <i class="fa-solid fa-mobile text-lg"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-slate-800">Android 2nd</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Featured Stock Grid -->
+            <div>
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-xs font-bold text-slate-800 tracking-tight uppercase">Featured Deals</h3>
+                    <div class="flex gap-1">
+                        <div class="w-1.5 h-1.5 rounded-full bg-indigo-600"></div>
+                        <div class="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
+                        <div class="w-1.5 h-1.5 rounded-full bg-slate-200"></div>
+                    </div>
+                </div>
+                <div id="featured-grid" class="grid grid-cols-2 gap-3">
+                    <!-- Dynamic injection -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 1: Phones Screen -->
+        <section id="view-phones" class="view-content space-y-4 hidden">
+            <div>
+                <h2 class="text-sm font-bold text-indigo-600 tracking-wider uppercase">AI Phone Shop</h2>
+                <p class="text-[10px] text-slate-500 font-semibold tracking-tight">Current real-time phone stock list</p>
+            </div>
+
+            <!-- Phones Search bar -->
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-xs"></i>
+                </span>
+                <input type="text" id="phones-search" oninput="handlePhonesSearch(this.value)" placeholder="Search phone models..." class="w-full bg-slate-100 border-0 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 rounded-2xl py-3 pl-10 pr-10 text-xs text-slate-800 placeholder-slate-400 shadow-inner">
+                <button onclick="clearSearch('phones-search')" id="phones-clear-btn" class="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hidden">
+                    <i class="fa-solid fa-circle-xmark text-xs"></i>
+                </button>
+            </div>
+
+            <!-- Tabs/Filters -->
+            <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                <button onclick="filterPhones('All')" id="btn-filter-All" class="filter-btn active flex-shrink-0 text-xs font-bold px-4 py-2.5 rounded-2xl bg-indigo-600 text-white border border-transparent shadow-sm">All</button>
+                <button onclick="filterPhones('iPhone New')" id="btn-filter-iPhone-New" class="filter-btn flex-shrink-0 text-xs font-bold px-4 py-2.5 rounded-2xl bg-white text-slate-700 border border-slate-100 shadow-sm">iPhone New</button>
+                <button onclick="filterPhones('iPhone Second')" id="btn-filter-iPhone-Second" class="filter-btn flex-shrink-0 text-xs font-bold px-4 py-2.5 rounded-2xl bg-white text-slate-700 border border-slate-100 shadow-sm">iPhone Second</button>
+                <button onclick="filterPhones('Android New')" id="btn-filter-Android-New" class="filter-btn flex-shrink-0 text-xs font-bold px-4 py-2.5 rounded-2xl bg-white text-slate-700 border border-slate-100 shadow-sm">Android New</button>
+                <button onclick="filterPhones('Android Second')" id="btn-filter-Android-Second" class="filter-btn flex-shrink-0 text-xs font-bold px-4 py-2.5 rounded-2xl bg-white text-slate-700 border border-slate-100 shadow-sm">Android Second</button>
+            </div>
+
+            <!-- Dynamic Phone List -->
+            <div id="phones-grid" class="grid grid-cols-2 gap-3">
+                <!-- Dynamic injection -->
+            </div>
+        </section>
+
+        <!-- Tab 2: Accessories Screen -->
+        <section id="view-accessories" class="view-content space-y-4 hidden">
+            <div>
+                <h2 class="text-sm font-bold text-indigo-600 tracking-wider uppercase">Gadgets & Accessories</h2>
+                <p class="text-[10px] text-slate-500 font-semibold tracking-tight">Powerbanks, chargers, and earphones</p>
+            </div>
+
+            <!-- Category buttons -->
+            <div class="flex gap-2 pb-2">
+                <button onclick="filterAccessories('All')" id="btn-acc-All" class="acc-filter-btn active text-xs font-bold px-4 py-2 rounded-xl bg-indigo-600 text-white shadow-sm">All</button>
+                <button onclick="filterAccessories('Powerbank')" id="btn-acc-Powerbank" class="acc-filter-btn text-xs font-bold px-4 py-2 rounded-xl bg-white text-slate-700 border border-slate-100 shadow-sm">Powerbanks</button>
+                <button onclick="filterAccessories('Charger')" id="btn-acc-Charger" class="acc-filter-btn text-xs font-bold px-4 py-2 rounded-xl bg-white text-slate-700 border border-slate-100 shadow-sm">Chargers</button>
+                <button onclick="filterAccessories('Earphone')" id="btn-acc-Earphone" class="acc-filter-btn text-xs font-bold px-4 py-2 rounded-xl bg-white text-slate-700 border border-slate-100 shadow-sm">Earphones</button>
+            </div>
+
+            <!-- Dynamic Accessories List -->
+            <div id="accessories-grid" class="grid grid-cols-2 gap-3">
+                <!-- Dynamic injection -->
+            </div>
+        </section>
+
+        <!-- Tab 3: Promotions & Favourites Screen -->
+        <section id="view-offers" class="view-content space-y-6 hidden">
+            <div>
+                <h2 class="text-sm font-bold text-indigo-600 tracking-wider uppercase">Promotions & Discounts</h2>
+                <p class="text-[10px] text-slate-500 font-semibold tracking-tight">Exclusive deals and saved favorites</p>
+            </div>
+
+            <!-- Promotions List -->
+            <div>
+                <h3 class="text-xs font-bold text-slate-800 tracking-tight uppercase mb-3">Hot Discount Offers</h3>
+                <div id="promotions-list" class="space-y-4">
+                    <!-- Dynamic injection of beautiful 24dp rounded white cards -->
+                </div>
+            </div>
+
+            <!-- Favourites List -->
+            <div>
+                <h3 class="text-xs font-bold text-slate-800 tracking-tight uppercase mb-3">Your Saved Stock Items</h3>
+                <div id="favourites-list" class="space-y-4">
+                    <!-- Dynamic injection of saved favorites from localStorage -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Tab 4: Contact Screen -->
+        <section id="view-contact" class="view-content space-y-6 hidden">
+            <div>
+                <h2 class="text-sm font-bold text-indigo-600 tracking-wider uppercase">Contact & Locations</h2>
+                <p class="text-[10px] text-slate-500 font-semibold tracking-tight">Drop by our physical store or message us directly</p>
+            </div>
+
+            <!-- Address Card -->
+            <div class="bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm space-y-3">
+                <div class="flex items-center gap-2 text-indigo-600">
+                    <i class="fa-solid fa-location-dot text-lg"></i>
+                    <h3 class="font-extrabold text-sm">Tachileik Store</h3>
+                </div>
+                <p class="text-sm text-slate-600 font-medium">No. 77, Bogyoke Road, Near Tachileik Border Gate, Tachileik, Myanmar</p>
+                <p class="text-xs text-indigo-600 font-bold">Business Hours: 9:00 AM - 9:00 PM (Daily)</p>
+            </div>
+
+            <!-- Call Phone Card -->
+            <div class="bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm space-y-4">
+                <div class="flex items-center gap-2 text-indigo-600">
+                    <i class="fa-solid fa-phone text-lg"></i>
+                    <h3 class="font-extrabold text-sm">Call Phone Numbers</h3>
+                </div>
+                <p class="text-xs text-slate-500">Tap on any number to make an instant direct call inquiries:</p>
+                <div class="space-y-2">
+                    <a href="tel:+959777666555" class="flex items-center justify-center gap-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold py-3 px-4 rounded-xl text-sm transition-colors">
+                        <i class="fa-solid fa-phone"></i>
+                        +95 9 777 666 555
+                    </a>
+                    <a href="tel:+959123456789" class="flex items-center justify-center gap-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold py-3 px-4 rounded-xl text-sm transition-colors">
+                        <i class="fa-solid fa-phone"></i>
+                        +95 9 123 456 789
+                    </a>
+                </div>
+            </div>
+
+            <!-- Social Inquire Messenger / Viber Card -->
+            <div class="bg-white rounded-[24px] p-6 border border-slate-100 shadow-sm space-y-4">
+                <h3 class="font-extrabold text-sm text-slate-800">Direct Social Messaging Channels</h3>
+                <p class="text-xs text-slate-500 leading-relaxed">Click to chat with our staff instantly on Viber or Facebook Messenger. We respond within minutes!</p>
+                <div class="space-y-3">
+                    <!-- Viber Purple Brand Button -->
+                    <a href="viber://chat?number=%2B959777666555" class="flex items-center justify-center gap-3 bg-[#7303C0] hover:bg-[#6102a3] text-white font-extrabold py-3.5 px-4 rounded-2xl text-sm transition-colors shadow-sm">
+                        <i class="fa-brands fa-viber text-lg"></i>
+                        Inquire on Viber Chat
+                    </a>
+                    <!-- Messenger Blue Brand Button -->
+                    <a href="https://m.me/aimobile7776" target="_blank" class="flex items-center justify-center gap-3 bg-[#0084FF] hover:bg-[#0074e0] text-white font-extrabold py-3.5 px-4 rounded-2xl text-sm transition-colors shadow-sm">
+                        <i class="fa-brands fa-facebook-messenger text-lg"></i>
+                        Chat on Messenger
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Specs Bottom Sheet Overlay -->
+    <div id="specs-bottom-sheet" class="fixed inset-0 bg-black/40 z-50 backdrop-blur-sm hidden transition-all flex items-end">
+        <div class="bg-white w-full rounded-t-[32px] max-w-md mx-auto p-6 space-y-5 animate-slide-up relative">
+            <!-- Drag Handle Line -->
+            <div class="w-12 h-1 bg-slate-200 rounded-full mx-auto -mt-2"></div>
+
+            <!-- Header Info -->
+            <div class="flex justify-between items-start pt-2">
+                <div>
+                    <h3 id="sheet-product-name" class="text-xl font-extrabold text-slate-900 leading-tight">iPhone 15 Pro Max</h3>
+                    <div class="flex items-baseline gap-2 mt-1">
+                        <span id="sheet-product-price" class="text-lg font-black text-indigo-600">4,300,000 MMK</span>
+                        <span id="sheet-product-old-price" class="text-xs text-slate-400 line-through font-medium hidden">4,500,000 MMK</span>
+                    </div>
+                </div>
+                <!-- Heart Save inside sheet -->
+                <button id="sheet-fav-btn" class="p-2 text-slate-300 hover:text-rose-500 transition-colors">
+                    <i class="fa-solid fa-heart text-2xl"></i>
+                </button>
+            </div>
+
+            <hr class="border-slate-100">
+
+            <!-- Condition and Category Tags -->
+            <div class="flex gap-2">
+                <span id="sheet-product-condition" class="bg-[#E1BEE7] text-purple-700 text-xs font-bold px-3 py-1.5 rounded-xl">ပါကင်သစ်</span>
+                <span id="sheet-product-category" class="bg-[#FFE0B2] text-orange-700 text-xs font-bold px-3 py-1.5 rounded-xl">iPhone New</span>
+            </div>
+
+            <!-- Specifications Card -->
+            <div class="space-y-2">
+                <h4 class="text-xs font-extrabold text-slate-700 uppercase tracking-wider">Product Specifications</h4>
+                <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 text-sm text-slate-600 leading-relaxed font-medium" id="sheet-product-specs">
+                    Screen: 6.7" Dynamic Island, Apple A17 Pro Chip...
+                </div>
+            </div>
+
+            <!-- Instant Social Inquire CTA -->
+            <div class="space-y-2.5 pt-2">
+                <p class="text-[11px] text-slate-500 font-bold">Have questions? Contact us directly:</p>
+                <a id="sheet-viber-link" href="#" class="flex items-center justify-center gap-2 bg-[#7303C0] text-white font-extrabold py-3 px-4 rounded-2xl text-sm transition-colors shadow-sm">
+                    <i class="fa-brands fa-viber text-base"></i>
+                    Inquire via Viber
+                </a>
+                <a id="sheet-messenger-link" href="#" target="_blank" class="flex items-center justify-center gap-2 bg-[#0084FF] text-white font-extrabold py-3 px-4 rounded-2xl text-sm transition-colors shadow-sm">
+                    <i class="fa-brands fa-facebook-messenger text-base"></i>
+                    Inquire via Messenger
+                </a>
+            </div>
+
+            <!-- Close overlay btn -->
+            <button onclick="closeBottomSheet()" class="absolute top-2 right-4 text-slate-400 p-2 hover:text-slate-600">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar (Responsive, Safe in iOS Safari) -->
+    <nav class="h-20 bg-white border-t border-slate-100 fixed bottom-0 left-0 right-0 z-40 flex items-center px-2 justify-between shadow-[0_-4px_12px_rgba(0,0,0,0.02)]">
+        <div class="max-w-md mx-auto w-full flex justify-around items-center h-full">
+            <button onclick="switchTab('home')" id="tab-home" class="nav-tab active flex flex-col items-center gap-1 flex-1 text-indigo-600">
+                <div class="w-12 h-8 rounded-full bg-indigo-50 flex items-center justify-center transition-all nav-pill">
+                    <i class="fa-solid fa-house text-base"></i>
+                </div>
+                <span class="text-[9px] font-bold uppercase tracking-tight">Home</span>
+            </button>
+            <button onclick="switchTab('phones')" id="tab-phones" class="nav-tab flex flex-col items-center gap-1 flex-1 text-slate-400 hover:text-indigo-600 transition-colors">
+                <div class="w-12 h-8 rounded-full flex items-center justify-center transition-all nav-pill">
+                    <i class="fa-solid fa-mobile-screen-button text-base"></i>
+                </div>
+                <span class="text-[9px] font-bold uppercase tracking-tight">Shop</span>
+            </button>
+            <button onclick="switchTab('accessories')" id="tab-accessories" class="nav-tab flex flex-col items-center gap-1 flex-1 text-slate-400 hover:text-indigo-600 transition-colors">
+                <div class="w-12 h-8 rounded-full flex items-center justify-center transition-all nav-pill">
+                    <i class="fa-solid fa-plug text-base"></i>
+                </div>
+                <span class="text-[9px] font-bold uppercase tracking-tight">Gadgets</span>
+            </button>
+            <button onclick="switchTab('offers')" id="tab-offers" class="nav-tab flex flex-col items-center gap-1 flex-1 text-slate-400 hover:text-indigo-600 transition-colors">
+                <div class="w-12 h-8 rounded-full flex items-center justify-center transition-all nav-pill">
+                    <i class="fa-solid fa-tag text-base"></i>
+                </div>
+                <span class="text-[9px] font-bold uppercase tracking-tight">Favs</span>
+            </button>
+            <button onclick="switchTab('contact')" id="tab-contact" class="nav-tab flex flex-col items-center gap-1 flex-1 text-slate-400 hover:text-indigo-600 transition-colors">
+                <div class="w-12 h-8 rounded-full flex items-center justify-center transition-all nav-pill">
+                    <i class="fa-solid fa-address-book text-base"></i>
+                </div>
+                <span class="text-[9px] font-bold uppercase tracking-tight">Contact</span>
+            </button>
+        </div>
+    </nav>
+
+    <script src="app.js"></script>
+</body>
+</html>
