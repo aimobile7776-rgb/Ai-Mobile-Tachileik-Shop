@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -39,7 +40,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.data.*
+import com.example.ui.AuthModalBottomSheet
 import com.example.ui.MainViewModel
+import com.example.ui.UserProfileSheet
 import com.example.ui.theme.*
 import java.text.NumberFormat
 import java.util.Locale
@@ -114,6 +117,9 @@ fun AppMainScreen(viewModel: MainViewModel = viewModel()) {
     // Bottom Sheet Specs lookup trigger
     val selectedProduct by viewModel.selectedProduct.collectAsStateWithLifecycle()
     val favouriteIds by viewModel.favouriteIds.collectAsStateWithLifecycle()
+    val currentUser by viewModel.currentUser.collectAsStateWithLifecycle()
+    val isAuthDialogOpen by viewModel.isAuthDialogOpen.collectAsStateWithLifecycle()
+    val isProfileSheetOpen by viewModel.isProfileSheetOpen.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -160,7 +166,7 @@ fun AppMainScreen(viewModel: MainViewModel = viewModel()) {
                     1 -> PhonesScreen(viewModel = viewModel)
                     2 -> AccessoriesScreen(viewModel = viewModel)
                     3 -> OffersScreen(viewModel = viewModel)
-                    4 -> ContactScreen()
+                    4 -> ContactScreen(viewModel = viewModel)
                 }
             }
 
@@ -178,6 +184,41 @@ fun AppMainScreen(viewModel: MainViewModel = viewModel()) {
                         onToggleFavourite = { viewModel.toggleFavourite(product) },
                         onInquireViber = { openViberChat(context, StoreInfo.viberUrl) },
                         onInquireMessenger = { openMessengerChat(context, StoreInfo.messengerUrl) }
+                    )
+                }
+            }
+
+            // Authentication Modal Bottom Sheet (Login / Sign Up)
+            if (isAuthDialogOpen) {
+                ModalBottomSheet(
+                    onDismissRequest = { viewModel.closeAuthDialog() },
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    dragHandle = { BottomSheetDefaults.DragHandle() }
+                ) {
+                    AuthModalBottomSheet(
+                        onLogin = { identifier, pass, onResult ->
+                            viewModel.login(identifier, pass, onResult)
+                        },
+                        onSignUp = { name, phone, email, pass, onResult ->
+                            viewModel.signUp(name, phone, email, pass, onResult)
+                        },
+                        onDismiss = { viewModel.closeAuthDialog() }
+                    )
+                }
+            }
+
+            // User Profile Sheet
+            if (isProfileSheetOpen && currentUser != null) {
+                ModalBottomSheet(
+                    onDismissRequest = { viewModel.closeProfileSheet() },
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    dragHandle = { BottomSheetDefaults.DragHandle() }
+                ) {
+                    UserProfileSheet(
+                        user = currentUser!!,
+                        favouriteCount = favouriteIds.size,
+                        onLogout = { viewModel.logout() },
+                        onDismiss = { viewModel.closeProfileSheet() }
                     )
                 }
             }
@@ -212,40 +253,106 @@ fun HomeScreen(
         // Top Space
         item { Spacer(modifier = Modifier.height(8.dp)) }
 
-        // Shop Logo and App title
+        // Shop Logo, App title and User Account Button
         item {
+            val currentUser by viewModel.currentUser.collectAsStateWithLifecycle()
+
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // Circular container with custom generated launcher image
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
-                    contentAlignment = Alignment.Center
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.img_store_logo),
-                        contentDescription = "AI Mobile Logo",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
+                    // Circular container with custom generated launcher image
+                    Box(
+                        modifier = Modifier
+                            .size(46.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Image(
+                            painter = painterResource(id = R.drawable.img_store_logo),
+                            contentDescription = "AI Mobile Logo",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    }
+                    Column {
+                        Text(
+                            text = "AI Mobile",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = "Tachileik Store Stock",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 }
-                Column {
-                    Text(
-                        text = "AI Mobile",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Text(
-                        text = "Tachileik Store Stock",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+
+                // Auth Action / User Profile Chip
+                if (currentUser != null) {
+                    Surface(
+                        onClick = { viewModel.openProfileSheet() },
+                        shape = RoundedCornerShape(20.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        tonalElevation = 2.dp,
+                        modifier = Modifier.testTag("home_user_chip")
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(26.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.primary),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = currentUser!!.fullName.take(1).uppercase(),
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    fontSize = 12.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                            Text(
+                                text = currentUser!!.fullName.take(9),
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    }
+                } else {
+                    FilledTonalButton(
+                        onClick = { viewModel.openAuthDialog() },
+                        shape = RoundedCornerShape(16.dp),
+                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                        modifier = Modifier.testTag("home_login_btn")
+                    ) {
+                        Icon(
+                            Icons.Default.AccountCircle,
+                            contentDescription = "Login",
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text(
+                            text = "Login",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }
@@ -843,8 +950,9 @@ fun OffersScreen(viewModel: MainViewModel) {
 
 // TAB 4: CONTACT SCREEN
 @Composable
-fun ContactScreen() {
+fun ContactScreen(viewModel: MainViewModel? = null) {
     val context = LocalContext.current
+    val currentUser = viewModel?.currentUser?.collectAsStateWithLifecycle()?.value
 
     LazyColumn(
         modifier = Modifier
@@ -856,16 +964,133 @@ fun ContactScreen() {
 
         item {
             Text(
-                text = "Contact & Locations",
+                text = "Contact & Account",
                 style = MaterialTheme.typography.headlineSmall,
                 fontWeight = FontWeight.ExtraBold,
                 color = MaterialTheme.colorScheme.primary
             )
             Text(
-                text = "Drop by our physical store or message us directly",
+                text = "Drop by our physical store or manage your VIP account",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+        }
+
+        // Account / VIP Membership Section Card
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = if (currentUser != null) 
+                        MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f)
+                    else 
+                        MaterialTheme.colorScheme.surface
+                ),
+                border = BorderStroke(
+                    1.dp, 
+                    if (currentUser != null) MaterialTheme.colorScheme.primary.copy(alpha = 0.3f) else MaterialTheme.colorScheme.outlineVariant
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    if (currentUser != null) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .clip(CircleShape)
+                                    .background(MaterialTheme.colorScheme.primary),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = currentUser.fullName.take(1).uppercase(),
+                                    color = Color.White,
+                                    fontSize = 20.sp,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                            Column {
+                                Text(
+                                    text = currentUser.fullName,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "⭐ ${currentUser.memberTier} • ${currentUser.phone}",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Button(
+                                onClick = { viewModel?.openProfileSheet() },
+                                modifier = Modifier.weight(1f),
+                                shape = RoundedCornerShape(14.dp)
+                            ) {
+                                Icon(Icons.Default.Person, contentDescription = null, modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(6.dp))
+                                Text("အချက်အလက် (Profile)", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                            }
+
+                            OutlinedButton(
+                                onClick = { viewModel?.logout() },
+                                shape = RoundedCornerShape(14.dp),
+                                colors = ButtonDefaults.outlinedButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                            ) {
+                                Icon(Icons.Default.Logout, contentDescription = null, modifier = Modifier.size(16.dp))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Text("ထွက်မည်", fontSize = 12.sp)
+                            }
+                        }
+                    } else {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(10.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.AccountCircle,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(32.dp)
+                            )
+                            Column {
+                                Text(
+                                    text = "AI Mobile VIP Member Account",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = "၁၀% လျှော့ဈေးနှင့် အာမခံမှတ်တမ်းအတွက် အကောင့်ဖွင့်ပါ",
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+
+                        Button(
+                            onClick = { viewModel?.openAuthDialog() },
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(14.dp)
+                        ) {
+                            Icon(Icons.Default.Login, contentDescription = null, modifier = Modifier.size(18.dp))
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Login / Sign Up (အကောင့်ဝင်/ဖွင့်ရန်)", fontSize = 13.sp, fontWeight = FontWeight.Bold)
+                        }
+                    }
+                }
+            }
         }
 
         // Store Address Card

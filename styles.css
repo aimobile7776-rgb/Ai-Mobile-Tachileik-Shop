@@ -1,0 +1,69 @@
+/* Premium Mobile Web Styles for AI Mobile Tachileik */
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+/* Fade in/out helper */
+.view-content {
+    animation: fadeIn 0.25s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Slide Up Drawer animation */
+.animate-slide-up {
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+/* Accent active state on nav-tab */
+.nav-tab.active {
+    color: #4F46E5 !important; /* Tailwind Indigo-600 */
+}
+
+.nav-tab.active i {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+/* Custom shadow depth */
+.shadow-premium {
+    box-shadow: 0 4px 20px -2px rgba(79, 70, 229, 0.08), 0 2px 8px -1px rgba(0, 0, 0, 0.03);
+}
+
+/* Adaptive desktop centering for premium view on wide displays */
+@media (min-width: 640px) {
+    body {
+        background-color: #E9ECEF;
+    }
+    header, nav {
+        max-width: 448px; /* max-w-md matching */
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+    }
+}
